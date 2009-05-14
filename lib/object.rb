@@ -35,11 +35,17 @@ class Object
   end
 
   ##
-  #   @person ? @person.name : nil
-  # vs
-  #   @person.try(:name)
-  def try(method)
-    send method if respond_to? method
+  # Define #try only if our Rails version is < 2.3, since 2.3 defines
+  # in ActiveSupport its own version with a different signature.
+  #
+  if ::Rails::VERSION::STRING < '2.3'
+    ##
+    #   @person ? @person.name : nil
+    # vs
+    #   @person.try(:name)
+    def try(method)
+      send method if respond_to? method
+    end
   end
 
   def class_attr_accessor(*attrs)
